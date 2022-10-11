@@ -18,30 +18,30 @@ namespace GildedRose
         Items = new List<Item>
                                           {
                 new Item { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20 },
-                new Item { Name = "Aged Brie", SellIn = 2, Quality = 0 },
+                new AgedBrie { Name = "Aged Brie", SellIn = 2, Quality = 0 },
                 new Item { Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7 },
-                new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 },
-                new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80 },
-                new Item
+                new Sulfuras { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 },
+                new Sulfuras { Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80 },
+                new BackstagePass
                 {
                     Name = "Backstage passes to a TAFKAL80ETC concert",
                     SellIn = 15,
                     Quality = 20
                 },
-                new Item
+                new BackstagePass
                 {
                     Name = "Backstage passes to a TAFKAL80ETC concert",
                     SellIn = 10,
                     Quality = 49
                 },
-                new Item
+                new BackstagePass
                 {
                     Name = "Backstage passes to a TAFKAL80ETC concert",
                     SellIn = 5,
                     Quality = 49
                 },
     			// this conjured item does not work properly yet
-    			new Item { Name = "Conjured Mana Cake", SellIn = 3, Quality = 6 }
+    			new Conjured { Name = "Conjured Mana Cake", SellIn = 3, Quality = 6 }
                                           }
 
       };
@@ -55,48 +55,16 @@ namespace GildedRose
           Console.WriteLine(app.Items[j].Name + ", " + app.Items[j].SellIn + ", " + app.Items[j].Quality);
         }
         Console.WriteLine("");
-        app.UpdateQuality();
+        app.UpdateAll();
       }
     }
 
-    public void UpdateQuality()
+    public void UpdateAll()
     {
       for (var i = 0; i < Items.Count; i++)
       {
         var item = Items[i];
-        switch (item.Name)
-        {
-          case "Aged Brie":
-            if (item.Quality < 50)
-            {
-              item.Quality++;
-              item.SellIn--;
-            }
-            break;
-          case var someVal when new Regex(@"Sulfuras").IsMatch(someVal!):
-            break;
-          case var someVal when new Regex(@"Backstage").IsMatch(someVal!):
-
-            if (item.SellIn < 1) item.Quality = 0;
-            else if (item.SellIn < 6) item.Quality += 3;
-            else if (item.SellIn < 11) item.Quality += 2;
-            else item.Quality++;
-            if (item.Quality > 50) item.Quality = 50;
-            item.SellIn--;
-            break;
-          case var someVal when new Regex(@"Conjured").IsMatch(someVal!):
-            if (item.SellIn < 1) item.Quality -= 4;
-            else item.Quality -= 2;
-            item.SellIn--;
-            if (item.Quality < 0) item.Quality = 0;
-            break;
-          default:
-            if (item.SellIn < 1) item.Quality -= 2;
-            else item.Quality--;
-            item.SellIn--;
-            if (item.Quality < 0) item.Quality = 0;
-            break;
-        }
+        item.UpdateQuality();
       }
     }
   }
@@ -109,4 +77,51 @@ public class Item
   public int SellIn { get; set; }
 
   public int Quality { get; set; }
+
+  public virtual void UpdateQuality() {
+    if (this.SellIn < 1) this.Quality -= 2;
+    else this.Quality--;
+    this.SellIn--;
+    if (this.Quality < 0) this.Quality = 0;
+  }
+}
+
+public class AgedBrie : Item 
+{
+  public override void UpdateQuality() {
+      if (this.Quality < 50)
+            {
+              this.Quality++;
+              this.SellIn--;
+            }
+  }
+}
+
+public class Sulfuras : Item 
+{
+  public override void UpdateQuality() {
+    return;
+  }
+}
+
+public class BackstagePass : Item 
+{
+  public override void UpdateQuality() {
+    if (this.SellIn < 1) this.Quality = 0;
+    else if (this.SellIn < 6) this.Quality += 3;
+    else if (this.SellIn < 11) this.Quality += 2;
+    else this.Quality++;
+    if (this.Quality > 50) this.Quality = 50;
+    this.SellIn--;
+  }
+}
+
+public class Conjured : Item 
+{
+  public override void UpdateQuality() {
+    if (this.SellIn < 1) this.Quality -= 4;
+    else this.Quality -= 2;
+    this.SellIn--;
+    if (this.Quality < 0) this.Quality = 0;
+  }
 }

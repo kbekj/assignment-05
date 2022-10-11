@@ -21,30 +21,30 @@ public class ProgramTests
   public void DexterityVest_quality_doesnt_drop_below_0()
   {
     program.Items.Add(new Item { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20 });
-    for (int i = 0; i < 30; i++) program.UpdateQuality();
+    for (int i = 0; i < 30; i++) program.UpdateAll();
     program.Items[0].Quality.Should().Be(0);
   }
 
   [Fact]
   public void Conjured_quality_decreases_by_2()
   {
-    program.Items.Add(new Item { Name = "Conjured item", SellIn = 10, Quality = 20 });
-    program.UpdateQuality();
+    program.Items.Add(new Conjured { Name = "Conjured item", SellIn = 10, Quality = 20 });
+    program.UpdateAll();
     program.Items[0].Quality.Should().Be(18);
   }
 
   [Fact]
   public void Conjured_quality_doesnt_drop_below_0()
   {
-    program.Items.Add(new Item { Name = "Conjured item", SellIn = 10, Quality = 20 });
-    for (int i = 0; i < 30; i++) program.UpdateQuality();
+    program.Items.Add(new Conjured{ Name = "Conjured item", SellIn = 10, Quality = 20 });
+    for (int i = 0; i < 30; i++) program.UpdateAll();
     program.Items[0].Quality.Should().Be(0);
   }
   [Fact]
   public void DexterityVest_quality_decreases_by_1()
   {
     program.Items.Add(new Item { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20 });
-    program.UpdateQuality();
+    program.UpdateAll();
     program.Items[0].Quality.Should().Be(19);
   }
 
@@ -52,30 +52,30 @@ public class ProgramTests
   public void DexterityVest_quality_decreases_by_2()
   {
     program.Items.Add(new Item { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20 });
-    for (int i = 0; i < 11; i++) program.UpdateQuality();
+    for (int i = 0; i < 11; i++) program.UpdateAll();
     program.Items[0].Quality.Should().Be(8);
   }
 
   [Fact]
   public void AgedBrie_quality_Increases_by_1()
   {
-    program.Items.Add(new Item { Name = "Aged Brie", SellIn = 2, Quality = 0 });
-    program.UpdateQuality();
+    program.Items.Add(new AgedBrie { Name = "Aged Brie", SellIn = 2, Quality = 0 });
+    program.UpdateAll();
     program.Items[0].Quality.Should().Be(1);
   }
   [Fact]
   public void AgedBrie_quality_dont_Increase_above_50()
   {
-    program.Items.Add(new Item { Name = "Aged Brie", SellIn = 2, Quality = 0 });
-    for (int i = 0; i < 60; i++) program.UpdateQuality();
+    program.Items.Add(new AgedBrie { Name = "Aged Brie", SellIn = 2, Quality = 0 });
+    for (int i = 0; i < 60; i++) program.UpdateAll();
     program.Items[0].Quality.Should().Be(50);
   }
 
   [Fact]
   public void First_Sulfuras_Dosent_Change()
   {
-    program.Items.Add(new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 });
-    program.UpdateQuality();
+    program.Items.Add(new Sulfuras{ Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 });
+    program.UpdateAll();
     var sulfuras = program.Items[0];
 
     sulfuras!.SellIn.Should().Be(0);
@@ -85,8 +85,8 @@ public class ProgramTests
   [Fact]
   public void Second_Sulfuras_Dosent_Change()
   {
-    program.Items.Add(new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80 });
-    program.UpdateQuality();
+    program.Items.Add(new Sulfuras { Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80 });
+    program.UpdateAll();
     var sulfuras = program.Items[0];
 
     sulfuras!.SellIn.Should().Be(-1);
@@ -96,7 +96,7 @@ public class ProgramTests
   [Fact]
   public void First_Backstage_Day6_sellIn9_and_Quality27()
   {
-    program.Items.Add(new Item
+    program.Items.Add(new BackstagePass
     {
       Name = "Backstage passes to a TAFKAL80ETC concert",
       SellIn = 15,
@@ -104,7 +104,7 @@ public class ProgramTests
     });
     for (int i = 0; i < 6; i++)
     {
-      program.UpdateQuality();
+      program.UpdateAll();
     }
 
     var item = program.Items[0];
@@ -116,7 +116,7 @@ public class ProgramTests
   [Fact]
   public void Backstage_Day10_sellIn5_and_Quality35()
   {
-    program.Items.Add(new Item
+    program.Items.Add(new BackstagePass
     {
       Name = "Backstage passes to a TAFKAL80ETC concert",
       SellIn = 15,
@@ -124,7 +124,7 @@ public class ProgramTests
     });
     for (int i = 0; i < 10; i++)
     {
-      program.UpdateQuality();
+      program.UpdateAll();
     }
     var item = program.Items[0];
 
@@ -135,7 +135,7 @@ public class ProgramTests
   [Fact]
   public void Backstage_Day11_sellIn4_and_Quality38()
   {
-    program.Items.Add(new Item
+    program.Items.Add(new BackstagePass
     {
       Name = "Backstage passes to a TAFKAL80ETC concert",
       SellIn = 15,
@@ -143,7 +143,7 @@ public class ProgramTests
     });
     for (int i = 0; i < 11; i++)
     {
-      program.UpdateQuality();
+      program.UpdateAll();
     }
     var item = program.Items[0];
 
@@ -154,7 +154,7 @@ public class ProgramTests
   [Fact]
   public void Backstage_Day6_SellIn_minus1_and_Quality0()
   {
-    program.Items.Add(new Item
+    program.Items.Add(new BackstagePass
     {
       Name = "Backstage passes to a TAFKAL80ETC concert",
       SellIn = 5,
@@ -162,7 +162,7 @@ public class ProgramTests
     });
     for (int i = 0; i < 6; i++)
     {
-      program.UpdateQuality();
+      program.UpdateAll();
     }
     var item = program.Items[0];
 
@@ -173,7 +173,7 @@ public class ProgramTests
   [Fact]
   public void Backstage_Day2_not_greater_than_50_quality()
   {
-    program.Items.Add(new Item
+    program.Items.Add(new BackstagePass
     {
       Name = "Backstage passes to a TAFKAL80ETC concert",
       SellIn = 5,
@@ -181,7 +181,7 @@ public class ProgramTests
     });
     for (int i = 0; i < 1; i++)
     {
-      program.UpdateQuality();
+      program.UpdateAll();
     }
     var item = program.Items[0];
 
